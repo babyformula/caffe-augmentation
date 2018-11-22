@@ -89,7 +89,7 @@ inline void WriteProtoToBinaryFile(
     const Message& proto, const string& filename) {
   WriteProtoToBinaryFile(proto, filename.c_str());
 }
-
+//--- singlelabel start---//
 bool ReadFileToDatum(const string& filename, const int label, Datum* datum);
 
 inline bool ReadFileToDatum(const string& filename, Datum* datum) {
@@ -125,7 +125,41 @@ inline bool ReadImageToDatum(const string& filename, const int label,
     const std::string & encoding, Datum* datum) {
   return ReadImageToDatum(filename, label, 0, 0, true, encoding, datum);
 }
+//--- singlelabel end---//
+//--- multilabel start---//
+bool ReadFileToDatum(const string& filename, const std::vector<int> labels, Datum* datum);
 
+
+bool ReadImageToDatum(const string& filename, const std::vector<int> labels,
+    const int height, const int width, const bool is_color,
+    const std::string & encoding, Datum* datum);
+
+inline bool ReadImageToDatum(const string& filename, const std::vector<int> labels,
+    const int height, const int width, const bool is_color, Datum* datum) {
+  return ReadImageToDatum(filename, labels, height, width, is_color,
+                          "", datum);
+}
+
+inline bool ReadImageToDatum(const string& filename, const std::vector<int> labels,
+    const int height, const int width, Datum* datum) {
+  return ReadImageToDatum(filename, labels, height, width, true, datum);
+}
+
+inline bool ReadImageToDatum(const string& filename, const std::vector<int> labels,
+    const bool is_color, Datum* datum) {
+  return ReadImageToDatum(filename, labels, 0, 0, is_color, datum);
+}
+
+inline bool ReadImageToDatum(const string& filename, const std::vector<int> labels,
+    Datum* datum) {
+  return ReadImageToDatum(filename, labels, 0, 0, true, datum);
+}
+
+inline bool ReadImageToDatum(const string& filename, const std::vector<int> labels,
+    const std::string & encoding, Datum* datum) {
+  return ReadImageToDatum(filename, labels, 0, 0, true, encoding, datum);
+}
+//--- multilabel end---//
 bool DecodeDatumNative(Datum* datum);
 bool DecodeDatum(Datum* datum, bool is_color);
 
@@ -145,6 +179,14 @@ cv::Mat DecodeDatumToCVMatNative(const Datum& datum);
 cv::Mat DecodeDatumToCVMat(const Datum& datum, bool is_color);
 
 void CVMatToDatum(const cv::Mat& cv_img, Datum* datum);
+
+// for multilabel
+void ReadImagesList(const string& source,
+    std::vector<std::pair<std::string, std::vector<int> > >* images_vec);
+
+void ReadImagesList(const string& source,
+    std::vector<std::pair<std::string, std::vector<float> > >* images_vec);
+
 #endif  // USE_OPENCV
 
 }  // namespace caffe

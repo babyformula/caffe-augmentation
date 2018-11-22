@@ -20,15 +20,15 @@ namespace caffe {
  * TODO(dox): thorough documentation for Forward and proto params.
  */
 template <typename Dtype>
-class ImageDataLayer : public BasePrefetchingDataLayer<Dtype> {
+class ImageRegressionDataLayer : public BasePrefetchingDataLayer<Dtype> {
  public:
-  explicit ImageDataLayer(const LayerParameter& param)
+  explicit ImageRegressionDataLayer(const LayerParameter& param)
       : BasePrefetchingDataLayer<Dtype>(param) {}
-  virtual ~ImageDataLayer();
+  virtual ~ImageRegressionDataLayer();
   virtual void DataLayerSetUp(const vector<Blob<Dtype>*>& bottom,
       const vector<Blob<Dtype>*>& top);
 
-  virtual inline const char* type() const { return "ImageData"; }
+  virtual inline const char* type() const { return "ImageRegressionData"; }
   virtual inline int ExactNumBottomBlobs() const { return 0; }
   virtual inline int ExactNumTopBlobs() const { return 2; }
 
@@ -37,8 +37,7 @@ class ImageDataLayer : public BasePrefetchingDataLayer<Dtype> {
   virtual void ShuffleImages();
   virtual void load_batch(Batch<Dtype>* batch);
 
-  //vector<std::pair<std::string, int> > lines_;
-  vector<std::pair<std::string, std::vector<int> > > lines_; 
+  vector<std::pair<std::string, std::vector<float> > > lines_; 
   int lines_id_;
   int label_size_;
 };

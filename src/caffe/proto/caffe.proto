@@ -33,7 +33,7 @@ message Datum {
   optional int32 width = 3;
   // the actual image data, in bytes
   optional bytes data = 4;
-  optional int32 label = 5;
+  repeated int32 label = 5;
   // Optionally, the datum could also hold float data.
   repeated float float_data = 6;
   // If true data contains an encoded image that need to be decoded
@@ -241,6 +241,7 @@ message SolverParameter {
 
   // Overlap compute and communication for data parallel training
   optional bool layer_wise_reduce = 41 [default = true];
+  repeated string weights = 42;
 }
 
 // A message that stores the solver snapshots
@@ -405,6 +406,7 @@ message LayerParameter {
   optional ThresholdParameter threshold_param = 128;
   optional TileParameter tile_param = 138;
   optional WindowDataParameter window_data_param = 129;
+  optional ShuffleChannelParameter shuffle_channel_param = 1410;
 }
 
 // Message that stores parameters used to apply transformation
@@ -452,6 +454,11 @@ message TransformationParameter {
   
   optional float apply_probability = 18 [default = 0.5];
   optional bool debug_params = 19 [default = false];
+  
+  optional bool use_deformed_resize = 23 [default = false];
+  optional float deformed_resize_th = 24 [default = 2];
+  optional uint32 crop_h = 25 [default = 0];
+  optional uint32 crop_w = 26 [default = 0];
 
 }
 
@@ -835,6 +842,7 @@ message ImageDataParameter {
   // data.
   optional bool mirror = 6 [default = false];
   optional string root_folder = 12 [default = ""];
+  optional uint32 label_size = 13 [default = 1];
 }
 
 message InfogainLossParameter {
@@ -902,6 +910,7 @@ message MemoryDataParameter {
   optional uint32 channels = 2;
   optional uint32 height = 3;
   optional uint32 width = 4;
+  optional uint32 label_size = 5 [default = 1];
 }
 
 message MVNParameter {
@@ -1434,4 +1443,7 @@ message PReLUParameter {
   optional FillerParameter filler = 1;
   // Whether or not slope parameters are shared across channels.
   optional bool channel_shared = 2 [default = false];
+}
+message ShuffleChannelParameter {
+    optional uint32 group = 1[default = 1]; // The number of group
 }
