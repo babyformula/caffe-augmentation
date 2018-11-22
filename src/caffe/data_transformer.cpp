@@ -395,6 +395,8 @@ void DataTransformer<Dtype>::Transform(const cv::Mat& img,
   cv::Mat cv_img = img;
 
   int current_angle = 0;
+  float current_apply_resize_prob;
+  caffe_rng_uniform(1, 0.f, 1.f, &current_apply_resize_prob);
   if (do_rotation) {
     current_angle = Rand(rotation_angle*2 + 1) - rotation_angle;
     if (current_angle)
